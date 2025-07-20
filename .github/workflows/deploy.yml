@@ -23,7 +23,7 @@ jobs:
       - name: Build and run ponghub
         run: |
           mkdir -p bin data
-          git clone --branch gh_pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
+          git clone --branch gh-pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
           if [ -f ponghub/ponghub_log.json ]; then
             cp ponghub/ponghub_log.json data/ponghub_log.json
           else
@@ -39,10 +39,10 @@ jobs:
           cp data/ponghub_log.json publish/
           echo "${{ secrets.DEPLOY_CNAME }}" > publish/CNAME
 
-      - name: Deploy to gh_pages
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.DEPLOY_TOKEN }}
           publish_dir: ./publish
-          publish_branch: gh_pages
+          publish_branch: gh-pages
           force_orphan: true
