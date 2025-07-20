@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Status Report</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Service Status Report</h1>
+        <div class="update-time">Last Updated: {{.UpdateTime}}</div>
+        {{range .Results}}
+        <div class="service-block card">
+            <h2>{{.Name}}</h2>
+            <h3>Service Status History</h3>
+            <div class="status-bar">
+                {{ $len := len .History }}
+                {{ if lt $len 72 }}
+                    {{ $missing := sub 72 $len }}
+                    {{ range $i := until $missing }}
+                        <div class="status-rect status-gray" title="No Result" data-time="No Data"></div>
+                    {{ end }}
+                {{ end }}
+                {{ range $i, $h := .History }}
+                    {{ if ge $i (sub $len 72) }}
+                        <div class="status-rect status-{{ $h.Status }}" title="{{ $h.Time }}: {{ $h.Status }}" data-time="{{ $h.Time }}"></div>
+                    {{ end }}
+                {{ end }}
+            </div>
+            {{ range $url, $arr := .Ports }}
+            <div class="port-block">
+                <div class="port-url">{{$url}}</div>
+                <div class="status-bar">
+                    {{ $len := len $arr }}
+                    {{ if lt $len 72 }}
+                        {{ $missing := sub 72 $len }}
+                        {{ range $i := until $missing }}
+                            <div class="status-rect status-gray" title="No Result" data-time="No Data"></div>
+                        {{ end }}
+                    {{ end }}
+                    {{ range $i, $h := $arr }}
+                        {{ if ge $i (sub $len 72) }}
+                            <div class="status-rect status-{{ $h.Status }}" data-time="{{ $h.Time }}"></div>
+                        {{ end }}
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+        </div>
+        {{end}}
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+name: Auto Deploy Report
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build and run ponghub
+        run: |
+          make run || true
+
+      - name: Prepare publish directory
+        run: |
+          mkdir -p publish/static
+          cp data/index.html publish/
+          cp static/style.css publish/static/
+
+      - name: Deploy to gh_pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.DEPLOY_TOKEN }}
+          publish_dir: ./publish
+          publish_branch: gh_pages
+          force_orphan: true

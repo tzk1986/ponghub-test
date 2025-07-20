@@ -1,0 +1,54 @@
+timeout: 3
+retry: 2
+max_log_days: 30
+services:
+  - name: "HTTP GET Success"
+    health:
+      - url: "https://httpbin.org/get"
+        method: "GET"
+        status_code: 200
+    api:
+      - url: "https://httpbin.org/get"
+        method: "GET"
+        response_regex: "\"url\": \"https://httpbin.org/get\""
+  - name: "HTTP GET Status Code Failed"
+    health:
+      - url: "https://httpbin.org/status/404"
+        method: "GET"
+        status_code: 200
+    api:
+      - url: "https://httpbin.org/status/404"
+        method: "GET"
+  - name: "HTTP POST with Body Success"
+    health:
+      - url: "https://httpbin.org/post"
+        method: "POST"
+        body: "{\"foo\": \"bar\"}"
+        status_code: 200
+        response_regex: "\"foo\": \"bar\""
+    api:
+      - url: "https://httpbin.org/post"
+        method: "POST"
+        body: "key=value"
+        status_code: 200
+  - name: "HTTP POST Body Regex Failed"
+    health:
+      - url: "https://httpbin.org/post"
+        method: "POST"
+        body: "{\"foo\": \"bar\"}"
+        status_code: 200
+        response_regex: "notfoundpattern"
+    api:
+      - url: "https://httpbin.org/post"
+        method: "POST"
+        body: "key=value"
+        response_regex: "notfoundpattern"
+  - name: "Only Check Accessibility"
+    health:
+      - url: "https://httpbin.org/get"
+        method: "GET"
+      - url: "https://not-exist-domain-123456789.com"
+        method: "GET"
+    api:
+      - url: "https://httpbin.org/status/500"
+        method: "GET"
