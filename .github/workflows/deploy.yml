@@ -23,7 +23,7 @@ jobs:
       - name: Build and run ponghub
         run: |
           git clone --branch gh_pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
-          if [ -f ponghub/config.yaml ]; then
+          if [ -f ponghub/ponghub_log.json ]; then
             cp ponghub/ponghub_log.json data/ponghub_log.json
           else
             echo "New installation, no previous data found."
