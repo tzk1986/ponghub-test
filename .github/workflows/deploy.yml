@@ -22,7 +22,13 @@ jobs:
 
       - name: Build and run ponghub
         run: |
-          mkdir bin data
+          git clone --branch gh_pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
+          if [ -f ponghub/config.yaml ]; then
+            cp ponghub/ponghub_log.json data/ponghub_log.json
+          else
+            echo "New installation, no previous data found."
+          fi
+          mkdir -p bin data
           make run || true
 
       - name: Prepare publish directory
@@ -30,6 +36,7 @@ jobs:
           mkdir -p publish/static
           cp data/index.html publish/
           cp static/style.css publish/static/
+          cp data/ponghub_log.json publish/
           echo "${{ secrets.DEPLOY_CNAME }}" > publish/CNAME
 
       - name: Deploy to gh_pages
