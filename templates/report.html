@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Status Report</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/icon.png">
 </head>
 <body>
     <div class="container">
-        <h1>Service Status Report</h1>
+        <img src="/static/logo.png" alt="Service Status Report" class="logo-img">
         <div class="update-time">Last Updated: {{.UpdateTime}}</div>
         {{range .Results}}
         <div class="service-block card">
@@ -51,4 +52,8 @@
         {{end}}
     </div>
 </body>
+<footer class="footer">
+    Want to build your own service status monitoring site?<br>
+    <a href="https://github.com/WCY-dt/ponghub" target="_blank" rel="noopener" class="footer-link">Visit the GitHub repo</a> and join us!
+</footer>
 </html>

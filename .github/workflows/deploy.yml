@@ -36,6 +36,8 @@ jobs:
           mkdir -p publish/static
           cp data/index.html publish/
           cp static/style.css publish/static/
+          cp static/logo.png publish/static/
+          cp static/icon.png publish/static/
           cp data/ponghub_log.json publish/
           echo "${{ secrets.DEPLOY_CNAME }}" > publish/CNAME
 

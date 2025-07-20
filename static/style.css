@@ -1,3 +1,21 @@
+/* Footer styles */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px 0;
+    background: #f8f8f8;
+    color: #555;
+    font-size: 1rem;
+}
+.footer-link {
+    color: #0077cc;
+    text-decoration: underline;
+}
+.logo-img {
+    height: 96px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
 body {
     font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
     background: #f7fafd;
