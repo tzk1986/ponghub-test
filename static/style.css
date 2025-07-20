@@ -7,15 +7,18 @@
     color: #555;
     font-size: 1rem;
 }
+
 .footer-link {
     color: #0077cc;
     text-decoration: underline;
 }
+
 .logo-img {
     height: 96px;
     margin-top: 10px;
     margin-bottom: 40px;
 }
+
 body {
     font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
     background: #f7fafd;
@@ -31,7 +34,7 @@ body {
     padding: 18px 24px 4px 24px;
     background: #f7fafd;
     border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(44,124,255,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+    box-shadow: 0 8px 32px rgba(44, 124, 255, 0.08), 0 1.5px 6px rgba(0, 0, 0, 0.04);
     overflow: visible;
 }
 
@@ -59,12 +62,13 @@ h1 {
     padding: 6px 20px 5px 20px;
     border-radius: 14px;
     background: #fff;
-    box-shadow: 0 2px 12px rgba(44,124,255,0.07), 0 1px 4px rgba(0,0,0,0.03);
+    box-shadow: 0 2px 12px rgba(44, 124, 255, 0.07), 0 1px 4px rgba(0, 0, 0, 0.03);
     overflow: visible;
     transition: box-shadow 0.2s;
 }
+
 .card:hover {
-    box-shadow: 0 8px 32px rgba(44,124,255,0.13), 0 2px 8px rgba(0,0,0,0.07);
+    box-shadow: 0 8px 32px rgba(44, 124, 255, 0.13), 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
 .service-block {
@@ -76,6 +80,7 @@ h2 {
     color: #333;
     margin-bottom: 10px;
 }
+
 h3 {
     color: #2d7cff;
     margin: 18px 0 10px 0;
@@ -91,8 +96,9 @@ h3 {
     background: #f0f4fa;
     border-radius: 8px;
     padding: 8px 10px 6px 10px;
-    box-shadow: 0 1px 4px rgba(44,124,255,0.04);
+    box-shadow: 0 1px 4px rgba(44, 124, 255, 0.04);
 }
+
 .port-url {
     min-width: 180px;
     font-size: 0.98em;
@@ -116,17 +122,19 @@ h3 {
     box-shadow: none;
     overflow: visible;
 }
+
 .status-rect {
     width: 100%;
     height: 32px;
     margin: 0 1px;
     border-radius: 2px;
     background: #ccc;
-    box-shadow: 0 1px 2px rgba(44,124,255,0.04);
+    box-shadow: 0 1px 2px rgba(44, 124, 255, 0.04);
     transition: background 0.2s;
     position: relative;
     cursor: pointer;
 }
+
 .status-rect:hover::after {
     content: attr(data-time);
     position: absolute;
@@ -140,7 +148,7 @@ h3 {
     border-radius: 8px;
     border: 1px solid #e0e7ef;
     white-space: nowrap;
-    box-shadow: 0 4px 16px rgba(44,124,255,0.10);
+    box-shadow: 0 4px 16px rgba(44, 124, 255, 0.10);
     z-index: 10;
     pointer-events: none;
     opacity: 1;
@@ -150,20 +158,29 @@ h3 {
 .status-gray {
     background: #e0e0e0;
 }
+
 .status-none {
     background: #ff4136;
-    box-shadow: 0 1px 4px rgba(255,65,54,0.08);
+    box-shadow: 0 1px 4px rgba(255, 65, 54, 0.08);
 }
+
 .status-part {
     background: #ffb700;
-    box-shadow: 0 1px 4px rgba(255,183,0,0.08);
+    box-shadow: 0 1px 4px rgba(255, 183, 0, 0.08);
 }
+
 .status-all {
     background: #2ecc40;
-    box-shadow: 0 1px 4px rgba(46,204,64,0.08);
+    box-shadow: 0 1px 4px rgba(46, 204, 64, 0.08);
 }
 
 @media (max-width: 900px) {
+    .logo-img {
+        height: auto;
+        max-height: 96px;
+        max-width: 100%;
+    }
+
     .container {
         width: 100%;
         min-width: 0;
@@ -174,18 +191,21 @@ h3 {
         border-radius: 0;
         box-shadow: none;
     }
+
     .card {
         padding: 10px 6px 10px 6px;
         margin-bottom: 18px;
         border-radius: 8px;
     }
+
     .port-block {
         margin-bottom: 12px;
         padding: 6px 4px 4px 4px;
         border-radius: 6px;
         background: #f0f4fa;
-        box-shadow: 0 1px 4px rgba(44,124,255,0.04);
+        box-shadow: 0 1px 4px rgba(44, 124, 255, 0.04);
     }
+
     .port-url {
         min-width: 80px;
         font-size: 0.92em;
@@ -194,28 +214,36 @@ h3 {
         font-weight: 500;
         letter-spacing: 0.5px;
     }
+
     .status-bar {
-        padding: 2px 0;
+        padding: 0;
         grid-template-columns: repeat(72, 1fr);
         background: transparent;
         box-shadow: none;
+        column-gap: 0;
     }
+
     .status-rect {
         height: 18px;
-        margin: 0 1px;
+        margin: 0;
         width: 100%;
-        box-shadow: 0 1px 2px rgba(44,124,255,0.04);
+        box-shadow: none;
+        border-radius: 0;
     }
+
     h1 {
         font-size: 1.3em;
         margin-bottom: 28px;
     }
+
     h2 {
         font-size: 1em;
     }
+
     h3 {
         font-size: 0.98em;
     }
+
     .update-time {
         font-size: 0.92em;
         margin-bottom: 10px;
