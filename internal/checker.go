@@ -52,7 +52,7 @@ func CheckPort(cfg *PortConfig, timeout int, retry int, svcName string, portType
 		fmt.Printf("[%s][%s] Checking %s (attempt %d/%d)\n", svcName, portType, cfg.URL, attempt, retry)
 		req, err := http.NewRequest(method, cfg.URL, nil)
 		if err != nil {
-			failures = append(failures, err.Error())
+			failures = append(failures, fmt.Sprintf("StatusCode: N/A, Error: %s", err.Error()))
 			continue
 		}
 		if cfg.Body != "" {
@@ -60,7 +60,7 @@ func CheckPort(cfg *PortConfig, timeout int, retry int, svcName string, portType
 		}
 		resp, err := client.Do(req)
 		if err != nil {
-			failures = append(failures, err.Error())
+			failures = append(failures, fmt.Sprintf("StatusCode: N/A, Error: %s", err.Error()))
 			continue
 		}
 		defer resp.Body.Close()

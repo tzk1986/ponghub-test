@@ -7,6 +7,30 @@ import (
 	"time"
 )
 
+// 合并端口状态
+func MergeOnlineStatus(statusList []string) string {
+	if len(statusList) == 0 {
+		return "none"
+	}
+	allNone := true
+	allAll := true
+	for _, s := range statusList {
+		if s != "none" {
+			allNone = false
+		}
+		if s != "all" {
+			allAll = false
+		}
+	}
+	if allNone {
+		return "none"
+	}
+	if allAll {
+		return "all"
+	}
+	return "part"
+}
+
 func OutputResults(results []CheckResult, maxLogDays int) error {
 	// Write main result
 	f, err := os.Create("data/ponghub_result.json")
@@ -90,20 +114,27 @@ func OutputResults(results []CheckResult, maxLogDays int) error {
 			portsMap = v
 		}
 		// Only record one port entry for each unique URL per complete run
-		uniquePorts := map[string]map[string]string{}
+		// 合并相同URL的端口状态
+		urlStatusMap := map[string][]string{}
+		urlTimeMap := map[string]string{}
 		for _, pr := range svc.Health {
-			uniquePorts[pr.URL] = map[string]string{
-				"time":   pr.StartTime,
-				"online": pr.Online,
+			urlStatusMap[pr.URL] = append(urlStatusMap[pr.URL], pr.Online)
+			if urlTimeMap[pr.URL] == "" {
+				urlTimeMap[pr.URL] = pr.StartTime
 			}
 		}
 		for _, pr := range svc.API {
-			uniquePorts[pr.URL] = map[string]string{
-				"time":   pr.StartTime,
-				"online": pr.Online,
+			urlStatusMap[pr.URL] = append(urlStatusMap[pr.URL], pr.Online)
+			if urlTimeMap[pr.URL] == "" {
+				urlTimeMap[pr.URL] = pr.StartTime
 			}
 		}
-		for url, entry := range uniquePorts {
+		for url, statusList := range urlStatusMap {
+			mergedStatus := MergeOnlineStatus(statusList)
+			entry := map[string]string{
+				"time":   urlTimeMap[url],
+				"online": mergedStatus,
+			}
 			portsMap[url] = append(portsMap[url], entry)
 		}
 		// Clean up expired port records
