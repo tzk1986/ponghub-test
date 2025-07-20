@@ -22,13 +22,13 @@ jobs:
 
       - name: Build and run ponghub
         run: |
+          mkdir -p bin data
           git clone --branch gh_pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
           if [ -f ponghub/ponghub_log.json ]; then
             cp ponghub/ponghub_log.json data/ponghub_log.json
           else
             echo "New installation, no previous data found."
           fi
-          mkdir -p bin data
           make run || true
 
       - name: Prepare publish directory
