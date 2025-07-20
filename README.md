@@ -1,7 +1,9 @@
 # [![PongHub](static/band.png)](https://health.ch3nyang.top)
 
 <div align="center">
+
 🌏 [Live Demo](https://health.ch3nyang.top) | 📖 [简体中文](README_CN.md)
+
 </div>
 
 ## Introduction
