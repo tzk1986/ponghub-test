@@ -30,6 +30,7 @@ jobs:
           mkdir -p publish/static
           cp data/index.html publish/
           cp static/style.css publish/static/
+          echo "${{ secrets.DEPLOY_CNAME }}" > publish/CNAME
 
       - name: Deploy to gh_pages
         uses: peaceiris/actions-gh-pages@v4
