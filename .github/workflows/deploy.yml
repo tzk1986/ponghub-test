@@ -19,6 +19,7 @@ jobs:
 
       - name: Build and run ponghub
         run: |
+          mkdir bin data
           make run || true
 
       - name: Prepare publish directory
