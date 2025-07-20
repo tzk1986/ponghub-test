@@ -1,4 +1,8 @@
-[![PongHub](static/band.png)](https://health.ch3nyang.top)
+# [![PongHub](static/band.png)](https://health.ch3nyang.top)
+
+<div align="center">
+🌏 [Live Demo](https://health.ch3nyang.top) | 📖 [简体中文](README_CN.md)
+</div>
 
 ## Introduction
 
@@ -9,8 +13,6 @@ PongHub is an open-source service status monitoring website designed to help use
 - Status code matching and response body regex matching
 - Custom request bodies
 - Customizable configurations such as check intervals, retry attempts, timeout durations, etc.
-
-[Live Demo](https://health.ch3nyang.top)
 
 ## Quick Start
 
@@ -63,11 +65,11 @@ services:
 - `max_log_days`: Maximum log retention period in days; older logs will be deleted
 - `services`: **[Optional]​**​​ List of services
   - `name`: Service name
-  - `health`: ​​**[Optional]​**​​ List of health check configurations
+  - `health`: **[Optional]​** List of health check configurations
     - `url`: URL to check
     - `method`: HTTP method (GET, POST, etc.)
     - `status_code`: ​​**​[Optional]​**​​ Expected HTTP status code
-    - `response_regex`: ​​​**[Optional]​**​​ Regex pattern to match in the response body
+    - `response_regex`: **[Optional]​** Regex pattern to match in the response body
     - `body`: ​​**​[Optional]​**​​ Request body content, used only for POST requests
   - `api`: ​​**​[Optional]​**​​ List of API check configurations, same format as above.
 

@@ -1,4 +1,8 @@
-[![PongHub](static/band.png)](https://health.ch3nyang.top)
+# [![PongHub](static/band.png)](https://health.ch3nyang.top)
+
+<div align="center">
+🌏 [Live Demo](https://health.ch3nyang.top) | 📖 [English](README.md)
+</div>
 
 ## 简介
 
@@ -9,8 +13,6 @@ PongHub 是一个开源的服务状态检查网站，旨在帮助用户监控和
 - 支持状态码匹配和响应体内容正则表达式匹配
 - 支持自定义请求体
 - 支持自定义检查间隔、重试次数、超时时间等配置
-
-[Live Demo](https://health.ch3nyang.top)
 
 ## 快速开始
 
