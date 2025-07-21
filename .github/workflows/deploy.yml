@@ -1,9 +1,6 @@
 name: Auto Deploy Report
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '*/30 * * * *'
   workflow_dispatch:
@@ -26,7 +23,7 @@ jobs:
       - name: "🏗️ Build and run PongHub"
         run: |
           mkdir -p bin data
-          git clone --branch gh-pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
+          git clone --branch gh-pages https://github.com/${{ github.repository }}.git || true
           if [ -f ponghub/ponghub_log.json ]; then
             cp ponghub/ponghub_log.json data/ponghub_log.json
           else
@@ -42,7 +39,7 @@ jobs:
           cp static/logo.png publish/static/
           cp static/icon.png publish/static/
           cp data/ponghub_log.json publish/
-          echo "${{ secrets.DEPLOY_CNAME }}" > publish/CNAME
+          cp CNAME > publish/
 
       - name: "🚀 Deploy to GitHub Pages"
         uses: JamesIves/github-pages-deploy-action@v4
