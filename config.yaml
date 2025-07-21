@@ -2,17 +2,21 @@ timeout: 5
 retry: 2
 max_log_days: 30
 services:
-  - name: "GitHub API"
-    health:
-      - url: "https://api.github.com"
-        method: "GET"
-        status_code: 200
+  - name: "My pages"
     api:
-      - url: "https://api.github.com/repos/wcy-dt/ponghub"
+      - url: "https://blog.ch3nyang.top"
         method: "GET"
         status_code: 200
-        response_regex: "full_name"
-  - name: "Ch3nyang's  Websites"
+      - url: "https://file.ch3nyang.top"
+        method: "GET"
+        status_code: 200
+      - url: "https://til.ch3nyang.top"
+        method: "GET"
+        status_code: 200
+      - url: "https://mind.ch3nyang.top"
+        method: "GET"
+        status_code: 200
+  - name: "My Services"
     health:
       - url: "https://docker-registry.ch3nyang.top/health"
         method: "GET"
@@ -20,6 +24,10 @@ services:
       - url: "https://2024.ch3nyang.top/health"
         method: "GET"
         status_code: 200
-      - url: "https://file.ch3nyang.top"
+    api:
+      - url: "https://docker-registry.ch3nyang.top"
+        method: "GET"
+        status_code: 200
+      - url: "https://2024.ch3nyang.top"
         method: "GET"
         status_code: 200

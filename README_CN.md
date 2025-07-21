@@ -20,17 +20,14 @@ PongHub 是一个开源的服务状态检查网站，旨在帮助用户监控和
 
 1. Star 并 Fork [PongHub](https://github.com/WCY-dt/ponghub)
 
-2. 在你 Fork 的仓库中，进入 `Settings` -> `Secrets and variables` -> `Actions` 页面，添加以下 Secrets：
+2. 修改根目录下的 [`config.yaml`](config.yaml) 文件，配置你的服务检查项
 
-    - `DEPLOY_TOKEN`: 你的 GitHub Personal Access Token，至少需要 `repo` 和 `workflow` 权限（[获取位置](https://github.com/settings/tokens)）
-    - `DEPLOY_CNAME`: 你希望使用的自定义域名，例如 `health.ch3nyang.top`
-    - `GH_USERNAME`: 你的 GitHub 用户名，例如 `WCY-dt`
+3. 修改根目录下的 [`CNAME`](CNAME) 文件，配置你的自定义域名
 
-    ![设置 secrets](static/step-secret.png)
+4. 提交修改并推送到你的仓库，GitHub Actions 将自动更新，无需干预
 
-3. 修改根目录下的 [`config.yaml`](config.yaml) 文件，配置你的服务检查项。
-
-4. 提交修改并推送到你的仓库，GitHub Actions 将自动运行并部署到 GitHub Pages。后期将自动更新，无需干预。
+> [!IMPORTANT]
+> 如果 GitHub Actions 未正常自动触发，手动触发一次即可。
 
 ## 配置说明
 
@@ -74,6 +71,9 @@ services:
     - `response_regex`: **[可选]** 响应体内容的正则表达式匹配
     - `body`: **[可选]** 请求体内容，仅在 POST 请求时使用
   - `api`: **[可选]** API 检查配置列表，格式同上。
+
+> [!TIP]
+> 目前 `health` 和 `api` 在处理上没有区别，这是为未来扩展做的预留。
 
 ## 免责声明
 

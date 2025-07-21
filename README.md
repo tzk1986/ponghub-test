@@ -20,17 +20,14 @@ PongHub is an open-source service status monitoring website designed to help use
 
 1. Star and Fork [PongHub](https://github.com/WCY-dt/ponghub)
 
-2. In your forked repository, navigate to `Settings` -> `Secrets and variables` -> `Actions` and add the following Secrets:
+2. Modify the [`config.yaml`](config.yaml) file in the root directory to configure your service checks.
 
-    - `DEPLOY_TOKEN`: Your GitHub Personal Access Token, requiring at least `repo` and `workflow` permissions ([Get it here](https://github.com/settings/tokens))
-    - `DEPLOY_CNAME`: Your desired custom domain, e.g., `health.ch3nyang.top`
-    - `GH_USERNAME`: Your GitHub username, e.g., `WCY-dt`
+3. Modify the [`CNAME`](CNAME) file in the root directory to set your custom domain name.
 
-    ![Setting secrets](static/step-secret.png)
+4. Commit and push your changes to your repository. GitHub Actions will automatically run and deploy to GitHub Pages and require no intervention.
 
-3. Modify the [`config.yaml`](config.yaml) file in the root directory to configure your service checks.
-
-4. Commit and push your changes to your repository. GitHub Actions will automatically run and deploy to GitHub Pages. Future updates will be automatic and require no intervention.
+> [!IMPORTANT]
+> If GitHub Actions does not trigger automatically, you can manually trigger it once.
 
 ## Configuration Guide
 
@@ -74,6 +71,9 @@ services:
     - `response_regex`: **[Optional]​** Regex pattern to match in the response body
     - `body`: ​​**​[Optional]​**​​ Request body content, used only for POST requests
   - `api`: ​​**​[Optional]​**​​ List of API check configurations, same format as above.
+
+> [!TIP]
+> Currently, there is no difference in handling between `health` and `api`, this is reserved for future expansion.
 
 ## Disclaimer
 
