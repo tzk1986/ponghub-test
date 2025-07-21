@@ -48,3 +48,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: publish
+          git-config-name: github-pages-deploy-action
+          git-config-email: noreply@github.com
