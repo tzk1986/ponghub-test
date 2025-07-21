@@ -25,9 +25,9 @@ services:
         method: "GET"
         status_code: 200
     api:
-      - url: "https://docker-registry.ch3nyang.top"
+      - url: "https://docker-registry.ch3nyang.top/v2"
         method: "GET"
-        status_code: 200
+        status_code: 401
       - url: "https://2024.ch3nyang.top"
         method: "GET"
         status_code: 200

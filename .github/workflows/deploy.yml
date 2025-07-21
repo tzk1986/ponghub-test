@@ -40,6 +40,7 @@ jobs:
           cp static/icon.png publish/static/
           cp data/ponghub_log.json publish/
           cp CNAME publish/
+          cp .nojekyll publish/
 
       - name: "🚀 Deploy to GitHub Pages"
         uses: JamesIves/github-pages-deploy-action@v4
