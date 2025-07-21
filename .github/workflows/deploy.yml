@@ -8,19 +8,22 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: "🔄 Checkout code"
         uses: actions/checkout@v4
 
-      - name: Set up Go
+      - name: "🐹 Set up Go"
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
 
-      - name: Build and run ponghub
+      - name: "🏗️ Build and run PongHub"
         run: |
           mkdir -p bin data
           git clone --branch gh-pages https://github.com/${{ secrets.GH_USERNAME }}/ponghub.git || true
@@ -31,7 +34,7 @@ jobs:
           fi
           make run || true
 
-      - name: Prepare publish directory
+      - name: "📦 Prepare publish directory"
         run: |
           mkdir -p publish/static
           cp data/index.html publish/
@@ -41,10 +44,7 @@ jobs:
           cp data/ponghub_log.json publish/
           echo "${{ secrets.DEPLOY_CNAME }}" > publish/CNAME
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: "🚀 Deploy to GitHub Pages"
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.DEPLOY_TOKEN }}
-          publish_dir: ./publish
-          publish_branch: gh-pages
-          force_orphan: true
+          folder: publish
