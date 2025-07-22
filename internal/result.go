@@ -39,23 +39,6 @@ func MergeOnlineStatus(statusList []testResult.TestResult) testResult.TestResult
 
 // OutputResults writes the check results to a JSON file and updates the log file
 func OutputResults(results []CheckResult, maxLogDays int) error {
-	// Open result file
-	f, err := os.Create(defaultConfig.GetResultPath())
-	if err != nil {
-		log.Fatalln("Failed to create result file:", err)
-	}
-	defer func(f *os.File) {
-		if err := f.Close(); err != nil {
-			log.Println("Error closing result file:", err)
-		}
-	}(f)
-
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	if err := enc.Encode(results); err != nil {
-		log.Fatalln("Failed to write results to file:", err)
-	}
-
 	// Get existing log data or create a new map
 	var logData = make(map[string]map[string]any)
 	if b, err := os.ReadFile(defaultConfig.GetLogPath()); err == nil {
@@ -64,15 +47,18 @@ func OutputResults(results []CheckResult, maxLogDays int) error {
 		}
 	}
 
+	// last update time
 	now := time.Now()
+
 	for _, svc := range results {
-		// Service history
+		// check if service already exists in logData, otherwise initialize it
 		if _, ok := logData[svc.Name]; !ok {
 			logData[svc.Name] = map[string]any{
 				"service_history": []any{},
 				"ports":           map[string][]any{},
 			}
 		}
+
 		// Handle service_history type
 		svcHistoryRaw := logData[svc.Name]["service_history"]
 		var svcHistory []map[string]string
@@ -163,7 +149,12 @@ func OutputResults(results []CheckResult, maxLogDays int) error {
 		}
 		logData[svc.Name]["ports"] = portsMap
 	}
+
+	// Write the results to the result file
 	logBytes, _ := json.MarshalIndent(logData, "", "  ")
-	_ = os.WriteFile(defaultConfig.GetLogPath(), logBytes, 0644)
+	err := os.WriteFile(defaultConfig.GetLogPath(), logBytes, 0644)
+	if err != nil {
+		log.Fatalln("Failed to write log file:", err)
+	}
 	return nil
 }

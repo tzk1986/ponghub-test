@@ -8,8 +8,9 @@
 
 ## 简介
 
-PongHub 是一个开源的服务状态检查网站，旨在帮助用户监控和验证服务的可用性。它支持
+PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和验证服务的可用性。它支持
 
+- 非侵入式监控
 - 利用 GitHub Actions 和 GitHub Pages 一键 CI/CD 部署
 - 支持单个服务的多端口检查
 - 支持状态码匹配和响应体内容正则表达式匹配
@@ -24,6 +25,9 @@ PongHub 是一个开源的服务状态检查网站，旨在帮助用户监控和
 
 3. 修改根目录下的 [`CNAME`](CNAME) 文件，配置你的自定义域名
 
+   > [!NOTE]
+   > 如果你不需要自定义域名，请删除 `CNAME` 文件
+
 4. 提交修改并推送到你的仓库，GitHub Actions 将自动更新，无需干预
 
 > [!IMPORTANT]
@@ -33,6 +37,23 @@ PongHub 是一个开源的服务状态检查网站，旨在帮助用户监控和
 
 配置文件 `config.yaml` 的格式如下：
 
+| 字段              | 类型   | 描述                          | 必填 |
+|-----------------|--------|-----------------------------|----|
+| `timeout`       | 整数   | 每次请求的超时时间，单位为秒              | 否  |
+| `retry`         | 整数   | 请求失败时的重试次数                  | 否  |
+| `max_log_days`  | 整数   | 日志保留天数，超过此天数的日志将被删除         | 否  |
+| `services`      | 数组   | 服务列表                        | 是  |
+| `services.name` | 字符串 | 服务名称                        | 是  |
+| `services.health` | 数组 | 健康检查配置列表                    | 否  |
+| `services.health.url` | 字符串 | 检查的 URL                     | 是  |
+| `services.health.method` | 字符串 | HTTP 方法（`GET`/`POST`/`PUT`） | 否  |
+| `services.health.status_code` | 整数 | 期望的 HTTP 状态码（默认 `200`）        | 否  |
+| `services.health.response_regex` | 字符串 | 响应体内容的正则表达式匹配               | 否  |
+| `services.health.body` | 字符串 | 请求体内容，仅在 `POST` 请求时使用            | 否  |
+| `services.api` | 数组 | API 检查配置列表，格式同上 | 否  |
+
+下面是一个示例配置文件：
+
 ```yaml
 timeout: 5
 retry: 2
@@ -41,8 +62,6 @@ services:
   - name: "GitHub API"
     health:
       - url: "https://api.github.com"
-        method: "GET"
-        status_code: 200
     api:
       - url: "https://api.github.com/repos/wcy-dt/ponghub"
         method: "GET"
@@ -51,29 +70,14 @@ services:
   - name: "Ch3nyang's  Websites"
     health:
       - url: "https://example.com/health"
-        method: "GET"
-        status_code: 200
         response_regex: "status"
       - url: "https://example.com/status"
         method: "POST"
         body: '{"key": "value"}'
 ```
 
-- `timeout`: 每次请求的超时时间，单位为秒
-- `retry`: 请求失败时的重试次数
-- `max_log_days`: 日志保留天数，超过此天数的日志将被删除
-- `services`: **[可选]** 服务列表
-  - `name`: 服务名称
-  - `health`: **[可选]** 健康检查配置列表
-    - `url`: 检查的 URL
-    - `method`: HTTP 方法（GET、POST 等）
-    - `status_code`: **[可选]** 期望的 HTTP 状态码
-    - `response_regex`: **[可选]** 响应体内容的正则表达式匹配
-    - `body`: **[可选]** 请求体内容，仅在 POST 请求时使用
-  - `api`: **[可选]** API 检查配置列表，格式同上。
-
 > [!TIP]
-> 目前 `health` 和 `api` 在处理上没有区别，这是为未来扩展做的预留。
+> `health` 和 `api` 至少有一个。这两者在处理上没有区别，是为未来扩展做的预留。
 
 ## 免责声明
 

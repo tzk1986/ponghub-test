@@ -10,6 +10,7 @@
 
 PongHub is an open-source service status monitoring website designed to help users track and verify service availability. It supports:
 
+- Non-intrusive monitoring
 - One-click CI/CD deployment using GitHub Actions and GitHub Pages
 - Multi-port checks for individual services
 - Status code matching and response body regex matching
@@ -24,6 +25,9 @@ PongHub is an open-source service status monitoring website designed to help use
 
 3. Modify the [`CNAME`](CNAME) file in the root directory to set your custom domain name.
 
+   > [!NOTE]
+   > If you do not need a custom domain, you can delete the `CNAME` file.
+
 4. Commit and push your changes to your repository. GitHub Actions will automatically run and deploy to GitHub Pages and require no intervention.
 
 > [!IMPORTANT]
@@ -33,6 +37,23 @@ PongHub is an open-source service status monitoring website designed to help use
 
 The `config.yaml` file follows this format:
 
+| Field                     | Type   | Description                                      | Required |
+|---------------------------|--------|--------------------------------------------------|----------|
+| `timeout`                 | Integer| Timeout for each request in seconds              | No       |
+| `retry`                   | Integer| Number of retry attempts on request failure      | No       |
+| `max_log_days`            | Integer| Number of days to retain logs; logs older than this will be deleted | No       |
+| `services`                | Array  | List of services to monitor                      | Yes      |
+| `services.name`           | String | Name of the service                              | Yes      |
+| `services.health`         | Array  | Health check configurations for the service      | No       |
+| `services.health.url`     | String | URL to check                                     | Yes      |
+| `services.health.method`  | String | HTTP method (`GET`/`POST`/`PUT`)                 | No       |
+| `services.health.status_code` | Integer | Expected HTTP status code (default `200`)       | No       |
+| `services.health.response_regex` | String | Regex to match response body content            | No       |
+| `services.health.body`    | String | Request body content, used only for `POST` requests | No       |
+| `services.api`            | Array  | API check configurations, same format as above   | No       |
+
+Here is an example configuration file:
+
 ```yaml
 timeout: 5
 retry: 2
@@ -41,39 +62,22 @@ services:
   - name: "GitHub API"
     health:
       - url: "https://api.github.com"
-        method: "GET"
-        status_code: 200
     api:
       - url: "https://api.github.com/repos/wcy-dt/ponghub"
         method: "GET"
         status_code: 200
         response_regex: "full_name"
-  - name: "Ch3nyang's Websites"
+  - name: "Ch3nyang's  Websites"
     health:
       - url: "https://example.com/health"
-        method: "GET"
-        status_code: 200
         response_regex: "status"
       - url: "https://example.com/status"
         method: "POST"
         body: '{"key": "value"}'
 ```
 
-- `timeout`: Request timeout duration in seconds
-- `retry`: Number of retry attempts upon failure
-- `max_log_days`: Maximum log retention period in days; older logs will be deleted
-- `services`: **[Optional]** List of services
-  - `name`: Service name
-  - `health`: **[Optional]** List of health check configurations
-    - `url`: URL to check
-    - `method`: HTTP method (GET, POST, etc.)
-    - `status_code`: **[Optional]** Expected HTTP status code
-    - `response_regex`: **[Optional]** Regex pattern to match in the response body
-    - `body`: **[Optional]** Request body content, used only for POST requests
-  - `api`: **[Optional]** List of API check configurations, same format as above.
-
 > [!TIP]
-> Currently, there is no difference in handling between `health` and `api`, this is reserved for future expansion.
+> The `health` and `api` sections must have at least one entry. They are processed similarly, with this distinction made for future expansion.
 
 ## Disclaimer
 

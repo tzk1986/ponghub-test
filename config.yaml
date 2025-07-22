@@ -5,29 +5,14 @@ services:
   - name: "My pages"
     api:
       - url: "https://blog.ch3nyang.top"
-        method: "GET"
-        status_code: 200
       - url: "https://file.ch3nyang.top"
-        method: "GET"
-        status_code: 200
       - url: "https://til.ch3nyang.top"
-        method: "GET"
-        status_code: 200
       - url: "https://mind.ch3nyang.top"
-        method: "GET"
-        status_code: 200
   - name: "My Services"
     health:
       - url: "https://docker-registry.ch3nyang.top/health"
-        method: "GET"
-        status_code: 200
       - url: "https://2024.ch3nyang.top/health"
-        method: "GET"
-        status_code: 200
     api:
       - url: "https://docker-registry.ch3nyang.top/v2"
-        method: "GET"
         status_code: 401
       - url: "https://2024.ch3nyang.top"
-        method: "GET"
-        status_code: 200

@@ -1,29 +1,29 @@
 package defaultConfig
 
 const (
-	// TIMEOUT is the default timeout for service checks in seconds
-	TIMEOUT = 5
+	// timeout is the default timeout for service checks in seconds
+	timeout = 5
 
-	// RETRY is the default retry count for service checks
-	RETRY = 2
+	// retry is the default retry count for service checks
+	retry = 2
 
-	// MAX_LOG_DAYS is the default maximum number of days to keep logs
-	MAX_LOG_DAYS = 30
+	// maxLogDays is the default maximum number of days to keep logs
+	maxLogDays = 30
 )
 
 // GetDefaultTimeout returns the default timeout for service checks
 func GetDefaultTimeout() int {
-	return TIMEOUT
+	return timeout
 }
 
 // GetDefaultRetry returns the default retry count for service checks
 func GetDefaultRetry() int {
-	return RETRY
+	return retry
 }
 
 // GetDefaultMaxLogDays returns the default maximum number of days to keep logs
 func GetDefaultMaxLogDays() int {
-	return MAX_LOG_DAYS
+	return maxLogDays
 }
 
 // SetDefaultTimeout sets the default timeout for a given configuration pointer
@@ -48,35 +48,27 @@ func SetDefaultMaxLogDays(cfg *int) {
 }
 
 const (
-	// CONFIG_PATH is the default path to the configuration file
-	CONFIG_PATH = "config.yaml"
+	// configPath is the default path to the configuration file
+	configPath = "config.yaml"
 
-	// RESULT_PATH is the default path to the data file where logs are stored
-	RESULT_PATH = "data/ponghub_result.json"
+	// logPath is the default path to the data file where logs are stored
+	logPath = "data/ponghub_log.json"
 
-	// LOG_PATH is the default path to the data file where logs are stored
-	LOG_PATH = "data/ponghub_log.json"
-
-	// REPORT_PATH is the default path to the HTML report file
-	REPORT_PATH = "data/index.html"
+	// reportPath is the default path to the HTML report file
+	reportPath = "data/index.html"
 )
 
 // GetConfigPath returns the default path to the configuration file
 func GetConfigPath() string {
-	return CONFIG_PATH
-}
-
-// GetResultPath returns the default path to the data file where logs are stored
-func GetResultPath() string {
-	return RESULT_PATH
+	return configPath
 }
 
 // GetLogPath returns the default path to the data file where logs are stored
 func GetLogPath() string {
-	return LOG_PATH
+	return logPath
 }
 
 // GetReportPath returns the default path to the HTML report file
 func GetReportPath() string {
-	return REPORT_PATH
+	return reportPath
 }
