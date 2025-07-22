@@ -34,7 +34,7 @@ jobs:
       - name: "📦 Prepare publish directory"
         run: |
           mkdir -p publish/static
-          cp -r data/ publish/
+          cp -r data/* publish/
           cp static/style.css publish/static/
           cp static/logo.png publish/static/
           cp static/icon.png publish/static/
