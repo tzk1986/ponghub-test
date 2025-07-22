@@ -3,17 +3,19 @@ package internal
 import (
 	"encoding/json"
 	"html/template"
+	"log"
 	"os"
 )
 
+// GenerateReport generates an HTML report from the log data at logPath and writes it to outPath
 func GenerateReport(logPath, outPath string) error {
 	b, err := os.ReadFile(logPath)
 	if err != nil {
-		return err
+		log.Fatalln("Failed to read log file:", err)
 	}
 	var logData map[string]map[string]any
 	if err := json.Unmarshal(b, &logData); err != nil {
-		return err
+		log.Fatalln("Failed to parse log data:", err)
 	}
 
 	// Build template data structure
@@ -77,12 +79,16 @@ func GenerateReport(logPath, outPath string) error {
 	}
 	tmpl, err := template.New("report.html").Funcs(funcMap).ParseFiles("templates/report.html")
 	if err != nil {
-		return err
+		log.Fatal("Failed to parse report template:", err)
 	}
 	f, err := os.Create(outPath)
 	if err != nil {
-		return err
+		log.Fatal("Failed to create report file:", err)
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		if err := f.Close(); err != nil {
+			log.Println("Error closing report file:", err)
+		}
+	}(f)
 	return tmpl.Execute(f, map[string]interface{}{"Results": results, "UpdateTime": latestTime})
 }

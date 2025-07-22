@@ -1,19 +1,23 @@
 package internal
 
 import (
+	"github.com/wcy-dt/ponghub/protos/defaultConfig"
+	"log"
 	"os"
 
 	"gopkg.in/yaml.v3"
 )
 
+// ServiceConfig defines the configuration for a service, including its health and API ports
 type ServiceConfig struct {
 	Name    string       `yaml:"name"`
 	Health  []PortConfig `yaml:"health"`
 	API     []PortConfig `yaml:"api"`
-	Timeout int          `yaml:"timeout,omitempty"` // Units: seconds (service-level default)
+	Timeout int          `yaml:"timeout,omitempty"`
 	Retry   int          `yaml:"retry,omitempty"`
 }
 
+// PortConfig defines the configuration for a port
 type PortConfig struct {
 	URL           string `yaml:"url"`
 	Method        string `yaml:"method,omitempty"`
@@ -22,41 +26,50 @@ type PortConfig struct {
 	ResponseRegex string `yaml:"response_regex,omitempty"`
 }
 
+// Config defines the overall configuration structure for the application
 type Config struct {
 	Services   []ServiceConfig `yaml:"services"`
-	Timeout    int             `yaml:"timeout,omitempty"`      // Units: seconds (global default)
-	Retry      int             `yaml:"retry,omitempty"`        // Global default retry count
-	MaxLogDays int             `yaml:"max_log_days,omitempty"` // Maximum days to keep logs
+	Timeout    int             `yaml:"timeout,omitempty"`
+	Retry      int             `yaml:"retry,omitempty"`
+	MaxLogDays int             `yaml:"max_log_days,omitempty"`
 }
 
+// SetDefaultFields sets default values for the configuration fields
+func SetDefaultFields(cfg *Config) {
+	defaultConfig.SetDefaultTimeout(&cfg.Timeout)
+	defaultConfig.SetDefaultRetry(&cfg.Retry)
+	defaultConfig.SetDefaultMaxLogDays(&cfg.MaxLogDays)
+
+	for i := range cfg.Services {
+		defaultConfig.SetDefaultTimeout(&cfg.Services[i].Timeout)
+		defaultConfig.SetDefaultRetry(&cfg.Services[i].Retry)
+	}
+}
+
+// LoadConfig loads the configuration from a YAML file at the specified path
 func LoadConfig(path string) (*Config, error) {
+	// Read the configuration file
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
-	var cfg Config
+	defer func(f *os.File) {
+		if err := f.Close(); err != nil {
+			log.Println("Error closing config file:", err)
+		}
+	}(f)
+
+	// Decode the YAML configuration
+	cfg := new(Config)
 	decoder := yaml.NewDecoder(f)
-	if err := decoder.Decode(&cfg); err != nil {
-		return nil, err
+	if err := decoder.Decode(cfg); err != nil {
+		log.Fatalln("Failed to decode YAML config:", err)
 	}
-	// Default values for global settings
-	if cfg.Timeout <= 0 {
-		cfg.Timeout = 5 // Default timeout 5 seconds
+	// Set default values for the configuration
+	SetDefaultFields(cfg)
+
+	if len(cfg.Services) == 0 {
+		log.Fatalln("No services defined in the configuration file")
 	}
-	if cfg.Retry <= 0 {
-		cfg.Retry = 2 // Default retry count 2
-	}
-	if cfg.MaxLogDays <= 0 {
-		cfg.MaxLogDays = 30 // Default max log days 30
-	}
-	for i := range cfg.Services {
-		if cfg.Services[i].Timeout <= 0 {
-			cfg.Services[i].Timeout = cfg.Timeout
-		}
-		if cfg.Services[i].Retry <= 0 {
-			cfg.Services[i].Retry = cfg.Retry
-		}
-	}
-	return &cfg, nil
+	return cfg, nil
 }

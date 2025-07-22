@@ -3,59 +3,73 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"time"
+
+	"github.com/wcy-dt/ponghub/protos/defaultConfig"
+	"github.com/wcy-dt/ponghub/protos/testResult"
 )
 
-// 合并端口状态
-func MergeOnlineStatus(statusList []string) string {
+// MergeOnlineStatus merges a list of online statuses into a single status
+func MergeOnlineStatus(statusList []testResult.TestResult) testResult.TestResult {
 	if len(statusList) == 0 {
-		return "none"
+		return testResult.NONE
 	}
-	allNone := true
-	allAll := true
+
+	hasNone, hasAll := false, false
 	for _, s := range statusList {
-		if s != "none" {
-			allNone = false
+		switch s {
+		case testResult.NONE:
+			hasNone = true
+		case testResult.ALL:
+			hasAll = true
 		}
-		if s != "all" {
-			allAll = false
-		}
 	}
-	if allNone {
-		return "none"
+
+	switch {
+	case hasNone && !hasAll:
+		return testResult.NONE
+	case !hasNone && hasAll:
+		return testResult.ALL
+	default:
+		return testResult.PART
 	}
-	if allAll {
-		return "all"
-	}
-	return "part"
 }
 
+// OutputResults writes the check results to a JSON file and updates the log file
 func OutputResults(results []CheckResult, maxLogDays int) error {
-	// Write main result
-	f, err := os.Create("data/ponghub_result.json")
+	// Open result file
+	f, err := os.Create(defaultConfig.GetResultPath())
 	if err != nil {
-		return err
+		log.Fatalln("Failed to create result file:", err)
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		if err := f.Close(); err != nil {
+			log.Println("Error closing result file:", err)
+		}
+	}(f)
+
 	enc := json.NewEncoder(f)
 	enc.SetIndent("", "  ")
 	if err := enc.Encode(results); err != nil {
-		return err
+		log.Fatalln("Failed to write results to file:", err)
 	}
 
-	// Write log
-	logPath := "data/ponghub_log.json"
-	var logData = make(map[string]map[string]interface{})
-	if b, err := os.ReadFile(logPath); err == nil {
-		_ = json.Unmarshal(b, &logData)
+	// Get existing log data or create a new map
+	var logData = make(map[string]map[string]any)
+	if b, err := os.ReadFile(defaultConfig.GetLogPath()); err == nil {
+		if err := json.Unmarshal(b, &logData); err != nil {
+			log.Fatalln("Failed to read existing log file:", err)
+		}
 	}
+
 	now := time.Now()
 	for _, svc := range results {
 		// Service history
 		if _, ok := logData[svc.Name]; !ok {
-			logData[svc.Name] = map[string]interface{}{
-				"service_history": []interface{}{},
+			logData[svc.Name] = map[string]any{
+				"service_history": []any{},
 				"ports":           map[string][]any{},
 			}
 		}
@@ -78,7 +92,7 @@ func OutputResults(results []CheckResult, maxLogDays int) error {
 		}
 		svcHistory = append(svcHistory, map[string]string{
 			"time":   svc.StartTime,
-			"online": svc.Online,
+			"online": svc.Online.String(),
 		})
 		// Clean up timeout records
 		var filteredSvcHistory []map[string]string
@@ -114,26 +128,25 @@ func OutputResults(results []CheckResult, maxLogDays int) error {
 			portsMap = v
 		}
 		// Only record one port entry for each unique URL per complete run
-		// 合并相同URL的端口状态
 		urlStatusMap := map[string][]string{}
 		urlTimeMap := map[string]string{}
 		for _, pr := range svc.Health {
-			urlStatusMap[pr.URL] = append(urlStatusMap[pr.URL], pr.Online)
+			urlStatusMap[pr.URL] = append(urlStatusMap[pr.URL], pr.Online.String())
 			if urlTimeMap[pr.URL] == "" {
 				urlTimeMap[pr.URL] = pr.StartTime
 			}
 		}
 		for _, pr := range svc.API {
-			urlStatusMap[pr.URL] = append(urlStatusMap[pr.URL], pr.Online)
+			urlStatusMap[pr.URL] = append(urlStatusMap[pr.URL], pr.Online.String())
 			if urlTimeMap[pr.URL] == "" {
 				urlTimeMap[pr.URL] = pr.StartTime
 			}
 		}
 		for url, statusList := range urlStatusMap {
-			mergedStatus := MergeOnlineStatus(statusList)
+			mergedStatus := MergeOnlineStatus(testResult.ParseTestResults(statusList))
 			entry := map[string]string{
 				"time":   urlTimeMap[url],
-				"online": mergedStatus,
+				"online": mergedStatus.String(),
 			}
 			portsMap[url] = append(portsMap[url], entry)
 		}
@@ -151,6 +164,6 @@ func OutputResults(results []CheckResult, maxLogDays int) error {
 		logData[svc.Name]["ports"] = portsMap
 	}
 	logBytes, _ := json.MarshalIndent(logData, "", "  ")
-	_ = os.WriteFile(logPath, logBytes, 0644)
+	_ = os.WriteFile(defaultConfig.GetLogPath(), logBytes, 0644)
 	return nil
 }

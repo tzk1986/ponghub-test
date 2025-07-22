@@ -1,24 +1,29 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	ponghub "github.com/wcy-dt/ponghub/internal"
+	"github.com/wcy-dt/ponghub/protos/defaultConfig"
 )
 
 func main() {
-	cfg, err := ponghub.LoadConfig("config.yaml")
+	// load the default configuration
+	cfg, err := ponghub.LoadConfig(defaultConfig.GetConfigPath())
 	if err != nil {
-		fmt.Println("Error loading config:", err)
-		return
+		log.Fatalln("Error loading config at", defaultConfig.GetConfigPath(), ":", err)
 	}
+
+	// check services based on the configuration
 	results := ponghub.CheckServices(cfg)
 	if err := ponghub.OutputResults(results, cfg.MaxLogDays); err != nil {
-		fmt.Println("Error outputting results:", err)
+		log.Fatalln("Error outputting results:", err)
 	}
-	if err := ponghub.GenerateReport("data/ponghub_log.json", "data/index.html"); err != nil {
-		fmt.Println("Failed to generate report:", err)
+
+	// generate the report based on the results
+	if err := ponghub.GenerateReport(defaultConfig.GetLogPath(), defaultConfig.GetReportPath()); err != nil {
+		log.Fatalln("Error generating report:", err)
 	} else {
-		fmt.Println("Report generated: data/index.html")
+		log.Println("Report generated at", defaultConfig.GetReportPath())
 	}
 }

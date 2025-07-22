@@ -62,15 +62,15 @@ services:
 - `timeout`: Request timeout duration in seconds
 - `retry`: Number of retry attempts upon failure
 - `max_log_days`: Maximum log retention period in days; older logs will be deleted
-- `services`: **[Optional]​**​​ List of services
+- `services`: **[Optional]** List of services
   - `name`: Service name
-  - `health`: **[Optional]​** List of health check configurations
+  - `health`: **[Optional]** List of health check configurations
     - `url`: URL to check
     - `method`: HTTP method (GET, POST, etc.)
-    - `status_code`: ​​**​[Optional]​**​​ Expected HTTP status code
-    - `response_regex`: **[Optional]​** Regex pattern to match in the response body
-    - `body`: ​​**​[Optional]​**​​ Request body content, used only for POST requests
-  - `api`: ​​**​[Optional]​**​​ List of API check configurations, same format as above.
+    - `status_code`: **[Optional]** Expected HTTP status code
+    - `response_regex`: **[Optional]** Regex pattern to match in the response body
+    - `body`: **[Optional]** Request body content, used only for POST requests
+  - `api`: **[Optional]** List of API check configurations, same format as above.
 
 > [!TIP]
 > Currently, there is no difference in handling between `health` and `api`, this is reserved for future expansion.
