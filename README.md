@@ -10,12 +10,12 @@
 
 PongHub is an open-source service status monitoring website designed to help users track and verify service availability. It supports:
 
-- Non-intrusive monitoring
-- One-click CI/CD deployment using GitHub Actions and GitHub Pages
-- Multi-port checks for individual services
-- Status code matching and response body regex matching
-- Custom request bodies
-- Customizable configurations such as check intervals, retry attempts, timeout durations, etc.
+- **🕵️ Zero-intrusion Monitoring** - Full-featured monitoring without code changes
+- **🚀 One-click Deployment** - Automatically built with GitHub Actions, deployed to GitHub Pages
+- **🌐 Cross-platform Support** - Compatible with public services like OpenAI and private deployments
+- **🔍 Multi-port Detection** - Monitor multiple ports for a single service
+- **🤖 Intelligent Response Validation** - Precise matching of status codes and regex validation of response bodies
+- **🛠️ Custom Request Engine** - Flexible configuration of request headers/bodies, timeouts, and retry strategies
 
 ![Browser Screenshot](static/browser.png)
 
@@ -27,7 +27,6 @@ PongHub is an open-source service status monitoring website designed to help use
 
 3. Modify the [`CNAME`](CNAME) file in the root directory to set your custom domain name.
    
-   > [!TIP]
    > If you do not need a custom domain, you can delete the `CNAME` file.
 
 4. Commit and push your changes to your repository. GitHub Actions will automatically run and deploy to GitHub Pages and require no intervention.
@@ -46,18 +45,18 @@ The `config.yaml` file follows this format:
 
 | Field                     | Type   | Description                                      | Required |
 |---------------------------|--------|--------------------------------------------------|----------|
-| `timeout`                 | Integer| Timeout for each request in seconds              | No       |
-| `retry`                   | Integer| Number of retry attempts on request failure      | No       |
-| `max_log_days`            | Integer| Number of days to retain logs; logs older than this will be deleted | No       |
-| `services`                | Array  | List of services to monitor                      | Yes      |
-| `services.name`           | String | Name of the service                              | Yes      |
-| `services.health`         | Array  | Health check configurations for the service      | No       |
-| `services.health.url`     | String | URL to check                                     | Yes      |
-| `services.health.method`  | String | HTTP method (`GET`/`POST`/`PUT`)                 | No       |
-| `services.health.status_code` | Integer | Expected HTTP status code (default `200`)       | No       |
-| `services.health.response_regex` | String | Regex to match response body content            | No       |
-| `services.health.body`    | String | Request body content, used only for `POST` requests | No       |
-| `services.api`            | Array  | API check configurations, same format as above   | No       |
+| `timeout`                 | Integer| Timeout for each request in seconds              | ✖️       |
+| `retry`                   | Integer| Number of retry attempts on request failure      | ✖️       |
+| `max_log_days`            | Integer| Number of days to retain logs; logs older than this will be deleted | ✖️       |
+| `services`                | Array  | List of services to monitor                      | ✔️      |
+| `services.name`           | String | Name of the service                              | ✔️      |
+| `services.health`         | Array  | Health check configurations for the service      | ✖️       |
+| `services.health.url`     | String | URL to check                                     | ✔️      |
+| `services.health.method`  | String | HTTP method (`GET`/`POST`/`PUT`)                 | ✖️       |
+| `services.health.status_code` | Integer | Expected HTTP status code (default `200`)       | ✖️       |
+| `services.health.response_regex` | String | Regex to match response body content            | ✖️       |
+| `services.health.body`    | String | Request body content, used only for `POST` requests | ✖️       |
+| `services.api`            | Array  | API check configurations, same format as above   | ✖️       |
 
 Here is an example configuration file:
 

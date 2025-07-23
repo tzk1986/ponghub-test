@@ -10,12 +10,12 @@
 
 PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和验证服务的可用性。它支持
 
-- 非侵入式监控
-- 利用 GitHub Actions 和 GitHub Pages 一键 CI/CD 部署
-- 支持单个服务的多端口检查
-- 支持状态码匹配和响应体内容正则表达式匹配
-- 支持自定义请求体
-- 支持自定义检查间隔、重试次数、超时时间等配置
+- **🕵️ 零侵入监控** - 无需改动代码即可实现全功能监控
+- **🚀 一键部署** - 通过 Actions 自动构建，一键部署至 Github Pages
+- **🌐 全平台支持** - 兼容 OpenAI 等公共服务及私有化部署
+- **🔍 多端口探测** - 单服务支持同时监控多个端口状态
+- **🤖 智能响应验证** - 精准匹配状态码及正则表达式校验响应体
+- **🛠️ 自定义请求引擎** - 自由配置请求头/体、超时和重试策略
 
 ![浏览器截图](static/browser_CN.png)
 
@@ -27,7 +27,6 @@ PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和
 
 3. 修改根目录下的 [`CNAME`](CNAME) 文件，配置你的自定义域名
 
-   > [!TIP]
    > 如果你不需要自定义域名，请删除 `CNAME` 文件
 
 4. 提交修改并推送到你的仓库，GitHub Actions 将自动更新，无需干预
@@ -46,18 +45,18 @@ PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和
 
 | 字段              | 类型   | 描述                          | 必填 |
 |-----------------|--------|-----------------------------|----|
-| `timeout`       | 整数   | 每次请求的超时时间，单位为秒              | 否  |
-| `retry`         | 整数   | 请求失败时的重试次数                  | 否  |
-| `max_log_days`  | 整数   | 日志保留天数，超过此天数的日志将被删除         | 否  |
-| `services`      | 数组   | 服务列表                        | 是  |
-| `services.name` | 字符串 | 服务名称                        | 是  |
-| `services.health` | 数组 | 健康检查配置列表                    | 否  |
-| `services.health.url` | 字符串 | 检查的 URL                     | 是  |
-| `services.health.method` | 字符串 | HTTP 方法（`GET`/`POST`/`PUT`） | 否  |
-| `services.health.status_code` | 整数 | 期望的 HTTP 状态码（默认 `200`）        | 否  |
-| `services.health.response_regex` | 字符串 | 响应体内容的正则表达式匹配               | 否  |
-| `services.health.body` | 字符串 | 请求体内容，仅在 `POST` 请求时使用            | 否  |
-| `services.api` | 数组 | API 检查配置列表，格式同上 | 否  |
+| `timeout`       | 整数   | 每次请求的超时时间，单位为秒              | ✖️  |
+| `retry`         | 整数   | 请求失败时的重试次数                  | ✖️  |
+| `max_log_days`  | 整数   | 日志保留天数，超过此天数的日志将被删除         | ✖️  |
+| `services`      | 数组   | 服务列表                        | ✔️  |
+| `services.name` | 字符串 | 服务名称                        | ✔️  |
+| `services.health` | 数组 | 健康检查配置列表                    | ✖️  |
+| `services.health.url` | 字符串 | 检查的 URL                     | ✔️  |
+| `services.health.method` | 字符串 | HTTP 方法（`GET`/`POST`/`PUT`） | ✖️  |
+| `services.health.status_code` | 整数 | 期望的 HTTP 状态码（默认 `200`）        | ✖️  |
+| `services.health.response_regex` | 字符串 | 响应体内容的正则表达式匹配               | ✖️  |
+| `services.health.body` | 字符串 | 请求体内容，仅在 `POST` 请求时使用            | ✖️  |
+| `services.api` | 数组 | API 检查配置列表，格式同上 | ✖️  |
 
 下面是一个示例配置文件：
 
