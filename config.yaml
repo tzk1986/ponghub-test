@@ -2,7 +2,7 @@ timeout: 5
 retry: 2
 max_log_days: 30
 services:
-  - name: "My pages"
+  - name: "My Pages"
     api:
       - url: "https://blog.ch3nyang.top"
       - url: "https://file.ch3nyang.top"

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"encoding/json"
+	"github.com/wcy-dt/ponghub/protos/testResult"
 	"html/template"
 	"log"
 	"os"
@@ -29,20 +30,27 @@ func GenerateReport(logPath, outPath string) error {
 		Status string
 	}
 	type ServiceResult struct {
-		Name    string
-		History []ServiceHistory
-		Ports   map[string][]PortHistory
+		Name         string
+		History      []ServiceHistory
+		Ports        map[string][]PortHistory
+		Availability float64
 	}
 	var results []ServiceResult
 	var latestTime string
 	for svcName, svcData := range logData {
 		serviceHistory := []ServiceHistory{}
+		allCount := 0   // Count of "ALL" status in service history
+		totalCount := 0 // Total count of service history entries
 		if sh, ok := svcData["service_history"].([]any); ok {
 			for _, entry := range sh {
 				m, _ := entry.(map[string]any)
 				status, _ := m["online"].(string)
 				time, _ := m["time"].(string)
 				serviceHistory = append(serviceHistory, ServiceHistory{Status: status, Time: time})
+				totalCount++
+				if status == testResult.ALL.String() {
+					allCount++
+				}
 				if time > latestTime {
 					latestTime = time
 				}
@@ -64,7 +72,19 @@ func GenerateReport(logPath, outPath string) error {
 				}
 			}
 		}
-		results = append(results, ServiceResult{Name: svcName, History: serviceHistory, Ports: ports})
+
+		// Calculate availability
+		availability := float64(0)
+		if totalCount > 0 {
+			availability = float64(allCount) / float64(totalCount)
+		}
+
+		results = append(results, ServiceResult{
+			Name:         svcName,
+			History:      serviceHistory,
+			Ports:        ports,
+			Availability: availability,
+		})
 	}
 
 	funcMap := template.FuncMap{
@@ -76,6 +96,7 @@ func GenerateReport(logPath, outPath string) error {
 			}
 			return arr
 		},
+		"mul": func(a, b float64) float64 { return a * b },
 	}
 	tmpl, err := template.New("report.html").Funcs(funcMap).ParseFiles("templates/report.html")
 	if err != nil {
@@ -90,5 +111,8 @@ func GenerateReport(logPath, outPath string) error {
 			log.Println("Error closing report file:", err)
 		}
 	}(f)
-	return tmpl.Execute(f, map[string]interface{}{"Results": results, "UpdateTime": latestTime})
+	return tmpl.Execute(f, map[string]interface{}{
+		"Results":    results,
+		"UpdateTime": latestTime,
+	})
 }

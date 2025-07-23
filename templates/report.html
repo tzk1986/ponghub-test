@@ -12,32 +12,55 @@
         <img src="/static/logo.png" alt="Service Status Report" class="logo-img">
         <div class="update-time">Last Updated: {{.UpdateTime}}</div>
         {{range .Results}}
-        <div class="service-block card">
-            <h2>{{.Name}}</h2>
-            <h3>Service Status History</h3>
-            <div class="status-bar">
-                {{ $len := len .History }}
-                {{ if lt $len 72 }}
+        <div class="service-block">
+            <div class="service-header">
+                <h2>{{.Name}}</h2>
+                {{ $last := index .History (sub (len .History) 1) }}
+                <div class="status-info status-info-{{ $last.Status }}">
+                    <span class="status-ball"></span>
+                    {{ if eq $last.Status "none" }}
+                        Service unavailable
+                    {{ else if eq $last.Status "part" }}
+                        Partial service disruption
+                    {{ else if eq $last.Status "all" }}
+                        Service operational
+                    {{ end }}
+                </div>
+                {{/* red < 95, 95 <= yellow < 100, green == 100 */}}
+                {{ $rate := mul .Availability 100 }}
+                <div class="availability-badge 
+                    {{if lt $rate 95.0}}availability-red{{else if lt $rate 100.0}}availability-yellow{{else}}availability-green{{end}}">
+                    <span class="availability-label">Availability</span>
+                    <span class="availability-value">{{printf "%.1f" $rate}}%</span>
+                </div>
+                <div class="status-bar status-bar-header">
+                    {{ $len := len .History }}
+                    {{ if lt $len 72 }}
                     {{ $missing := sub 72 $len }}
                     {{ range $i := until $missing }}
-                        <div class="status-rect status-gray" title="No Result" data-time="No Data"></div>
+                    <div class="status-rect status-unknown" title="No Result" data-time="No Data"></div>
                     {{ end }}
-                {{ end }}
-                {{ range $i, $h := .History }}
+                    {{ end }}
+                    {{ range $i, $h := .History }}
                     {{ if ge $i (sub $len 72) }}
-                        <div class="status-rect status-{{ $h.Status }}" title="{{ $h.Time }}: {{ $h.Status }}" data-time="{{ $h.Time }}"></div>
+                    <div class="status-rect status-{{ $h.Status }}" title="{{ $h.Time }}: {{ $h.Status }}" data-time="{{ $h.Time }}"></div>
                     {{ end }}
-                {{ end }}
+                    {{ end }}
+                </div>
             </div>
             {{ range $url, $arr := .Ports }}
             <div class="port-block">
-                <div class="port-url">{{$url}}</div>
+                {{ $last := index $arr (sub (len $arr) 1) }}
+                <div class="port-url status-info-{{ $last.Status }}">
+                    <span class="status-ball"></span>
+                    {{$url}}
+                </div>
                 <div class="status-bar">
                     {{ $len := len $arr }}
                     {{ if lt $len 72 }}
                         {{ $missing := sub 72 $len }}
                         {{ range $i := until $missing }}
-                            <div class="status-rect status-gray" title="No Result" data-time="No Data"></div>
+                            <div class="status-rect status-unknown" title="No Result" data-time="No Data"></div>
                         {{ end }}
                     {{ end }}
                     {{ range $i, $h := $arr }}
@@ -53,7 +76,7 @@
     </div>
 </body>
 <footer class="footer">
-    Want to build your own service status monitoring site?<br>
+    Want to build your own service monitoring site?<br>
     <a href="https://github.com/WCY-dt/ponghub" target="_blank" rel="noopener" class="footer-link">Visit the GitHub repo</a> and join us!
 </footer>
 </html>

@@ -25,10 +25,14 @@ PongHub is an open-source service status monitoring website designed to help use
 
 3. Modify the [`CNAME`](CNAME) file in the root directory to set your custom domain name.
 
-   > [!NOTE]
    > If you do not need a custom domain, you can delete the `CNAME` file.
 
 4. Commit and push your changes to your repository. GitHub Actions will automatically run and deploy to GitHub Pages and require no intervention.
+
+> [!INFO]
+> By default, GitHub Actions runs every 30 minutes. If you need to change the frequency, modify the `cron` expression in the [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) file.
+> 
+> Please do not set the frequency too high to avoid triggering GitHub's rate limits.
 
 > [!IMPORTANT]
 > If GitHub Actions does not trigger automatically, you can manually trigger it once.

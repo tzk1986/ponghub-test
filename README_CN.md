@@ -25,10 +25,14 @@ PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和
 
 3. 修改根目录下的 [`CNAME`](CNAME) 文件，配置你的自定义域名
 
-   > [!NOTE]
    > 如果你不需要自定义域名，请删除 `CNAME` 文件
 
 4. 提交修改并推送到你的仓库，GitHub Actions 将自动更新，无需干预
+
+> [!INFO]
+> 默认情况下，GitHub Actions 每 30 分钟运行一次。如果你需要更改运行频率，请修改 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 文件中的 `cron` 表达式。
+> 
+> 请不要将频率设置过高，以免触发 GitHub 的限制。
 
 > [!IMPORTANT]
 > 如果 GitHub Actions 未正常自动触发，手动触发一次即可。
