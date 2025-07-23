@@ -17,6 +17,8 @@ PongHub is an open-source service status monitoring website designed to help use
 - Custom request bodies
 - Customizable configurations such as check intervals, retry attempts, timeout durations, etc.
 
+![Browser Screenshot](static/browser.png)
+
 ## Quick Start
 
 1. Star and Fork [PongHub](https://github.com/WCY-dt/ponghub)
@@ -24,12 +26,13 @@ PongHub is an open-source service status monitoring website designed to help use
 2. Modify the [`config.yaml`](config.yaml) file in the root directory to configure your service checks.
 
 3. Modify the [`CNAME`](CNAME) file in the root directory to set your custom domain name.
-
+   
+   > [!TIP]
    > If you do not need a custom domain, you can delete the `CNAME` file.
 
 4. Commit and push your changes to your repository. GitHub Actions will automatically run and deploy to GitHub Pages and require no intervention.
 
-> [!INFO]
+> [!TIP]
 > By default, GitHub Actions runs every 30 minutes. If you need to change the frequency, modify the `cron` expression in the [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) file.
 > 
 > Please do not set the frequency too high to avoid triggering GitHub's rate limits.
@@ -80,7 +83,7 @@ services:
         body: '{"key": "value"}'
 ```
 
-> [!TIP]
+> [!NOTE]
 > The `health` and `api` sections must have at least one entry. They are processed similarly, with this distinction made for future expansion.
 
 ## Disclaimer

@@ -17,6 +17,8 @@ PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和
 - 支持自定义请求体
 - 支持自定义检查间隔、重试次数、超时时间等配置
 
+![浏览器截图](static/browser_CN.png)
+
 ## 快速开始
 
 1. Star 并 Fork [PongHub](https://github.com/WCY-dt/ponghub)
@@ -25,11 +27,12 @@ PongHub 是一个开源的服务状态监控网站，旨在帮助用户监控和
 
 3. 修改根目录下的 [`CNAME`](CNAME) 文件，配置你的自定义域名
 
+   > [!TIP]
    > 如果你不需要自定义域名，请删除 `CNAME` 文件
 
 4. 提交修改并推送到你的仓库，GitHub Actions 将自动更新，无需干预
 
-> [!INFO]
+> [!TIP]
 > 默认情况下，GitHub Actions 每 30 分钟运行一次。如果你需要更改运行频率，请修改 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 文件中的 `cron` 表达式。
 > 
 > 请不要将频率设置过高，以免触发 GitHub 的限制。
@@ -80,7 +83,7 @@ services:
         body: '{"key": "value"}'
 ```
 
-> [!TIP]
+> [!NOTE]
 > `health` 和 `api` 至少有一个。这两者在处理上没有区别，是为未来扩展做的预留。
 
 ## 免责声明
